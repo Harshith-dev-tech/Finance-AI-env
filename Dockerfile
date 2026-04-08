@@ -20,4 +20,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY env.py tasks.py inference.py openenv.yaml ./
 
 # Default command: run the evaluation script
-CMD ["sh", "-c", "python inference.py && python -m http.server 7860"]
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "7860"]
