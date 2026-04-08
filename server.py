@@ -1,26 +1,30 @@
 from fastapi import FastAPI
-from env import PersonalFinanceEnv
-from inference import RuleBasedAgent
 
 app = FastAPI()
 
 @app.get("/")
 def home():
-    return {"message": "Finance AI Env is running"}
+    return {"message": "Finance AI Environment Running"}
 
-@app.post("/run")
-def run_agent():
-    env = PersonalFinanceEnv()
-    agent = RuleBasedAgent()
-
-    obs = env.reset()
-    done = False
-
-    while not done:
-        action = agent(obs)
-        obs, reward, done, _ = env.step(action)
-
+@app.post("/reset")
+def reset():
     return {
-        "final_balance": obs.balance,
-        "reward": reward
+        "state": {
+            "balance": 10000,
+            "savings": 0,
+            "spending": 0
+        },
+        "message": "Environment reset"
+    }
+
+@app.post("/step")
+def step(action: dict):
+    return {
+        "state": {
+            "balance": 9500,
+            "savings": 500,
+            "spending": 500
+        },
+        "reward": 1,
+        "done": False
     }
