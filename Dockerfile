@@ -17,7 +17,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy all source files
-COPY env.py tasks.py inference.py openenv.yaml ./
+COPY env.py tasks.py inference.py server.py openenv.yaml ./
 
 # Default command: run the evaluation script
 CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "7860"]
