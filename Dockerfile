@@ -1,23 +1,22 @@
-# ─── Personal Finance RL Environment — Dockerfile ───────────────────────────
-# Base: slim Python 3.11 image for a small footprint
 FROM python:3.11-slim
 
-# Metadata
-LABEL name="personal-finance-control" \
-      version="1.0.0" \
-      description="OpenEnv personal finance RL environment"
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
 
-# Set working directory
 WORKDIR /app
 
-# Copy dependency list first (better layer caching)
-COPY requirements.txt .
+# Copy requirements first (for caching)
+COPY requirements.txt /app/
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Copy all source files
-COPY . .
+# Copy project files
+COPY . /app
 
-# Default command: run the evaluation script
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "7860"]
+# Expose port
+EXPOSE 7860
+
+# Start FastAPI server
+CMD ["uvicorn", "server.app:app", "--host", "0.0.0.0", "--port", "7860"]
